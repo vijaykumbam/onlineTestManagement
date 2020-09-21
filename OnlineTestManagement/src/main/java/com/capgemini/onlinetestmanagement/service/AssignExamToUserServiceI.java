@@ -28,12 +28,14 @@ public interface AssignExamToUserServiceI {
 		//Assign Exam to Users(Admin Functions)
 		
 		//Queries Started..........
-		public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId);
-		public List<AssignExamToUser> viewExamForUserToTake(int userId);
+		
+		public List<AssignExamToUser> viewExamsForUserToTake(int userId);
 		
 		
 		//Vijay
 		public AssignExamToUser assignExamToUser(int userId, int examId);
 		public String editAssignExamToUser(AssignExamToUser editAssignExamToUser ,int examId);
 		public Optional<AssignExamToUser> viewAssignExamById(int assignedId);
+		public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId);
+		public Boolean checkDateConflict(int userId,int year,int month,int date );
 }

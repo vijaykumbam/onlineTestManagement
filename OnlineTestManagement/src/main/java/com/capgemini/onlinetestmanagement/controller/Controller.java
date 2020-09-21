@@ -1,5 +1,8 @@
 package com.capgemini.onlinetestmanagement.controller;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.onlinetestmanagement.entity.AssignExamToUser;
 import com.capgemini.onlinetestmanagement.entity.Exam;
 import com.capgemini.onlinetestmanagement.entity.User;
+import com.capgemini.onlinetestmanagement.exceptions.AssignExamUserException;
+import com.capgemini.onlinetestmanagement.exceptions.ExamException;
+import com.capgemini.onlinetestmanagement.exceptions.UserExceptions;
 import com.capgemini.onlinetestmanagement.service.AssignExamToUserServiceI;
 
 
@@ -30,102 +36,129 @@ public class Controller {
 	
 	
 	@PostMapping("/user/addUser")
-	public ResponseEntity<Boolean> addUser(@RequestBody User user){
+	public ResponseEntity<Boolean> addUser(@RequestBody User user) throws UserExceptions{
 		boolean status = service.addUser(user);
-		if(status ==true)
+		if(status == true)
 		{
 			System.out.println("user is added");
+			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		}
 		else
-			System.out.println("sry ssomething is gone wrong");
-		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		  throw new UserExceptions("Unable to Create the User ");
+		
 	}
+	
 	
 	
 	@GetMapping("/user/getUser/{userId}")
-	public ResponseEntity<String>getUserById(@PathVariable("userId") int userId){
+	public ResponseEntity<User>getUserById(@PathVariable("userId") int userId) throws UserExceptions{
 		Optional<User>status = service.getUserById(userId);
-		if(status!= null)
+		if(status.isPresent())
 		{
-			return new ResponseEntity<String>("success",HttpStatus.OK);
+			User user = status.get();
+			return new ResponseEntity<User>(user,HttpStatus.OK);
 		}
 		else
 		{
-			return new ResponseEntity<String>("Something gone wrong",HttpStatus.OK);
+			throw new UserExceptions(userId+"Unable to find the User! Please try again");
 		}
 	}
 	
+	
+	
 	@PostMapping("/exam/addExam")
-	public ResponseEntity<Boolean> addExam(@RequestBody Exam exam){
+	public ResponseEntity<Boolean> addExam(@RequestBody Exam exam) throws ExamException{
 		boolean status = service.addExam(exam);
 		if(status ==true)
 		{
 			System.out.println("exam is added");
+			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		}
 		else
-			System.out.println("sry ssomething is gone wrong");
-		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		{
+			throw new ExamException("Unable to create the Exam! Check it once again");
+		}
 	}
 	
 	
 	
 	@GetMapping("/exam/getExam/{examId}")
-	public ResponseEntity<String>getExamById(@PathVariable("examId") int examId){
+	public ResponseEntity<Exam>getExamById(@PathVariable("examId") int examId) throws ExamException{
 		Optional<Exam>status = service.getExamById(examId);
-		if(status!= null)
+		if(status.isPresent()==true)
 		{
-			return new ResponseEntity<String>("success",HttpStatus.OK);
+			Exam exam = status.get();
+			return new ResponseEntity<Exam>(exam,HttpStatus.OK);
 		}
 		else
 		{
-			return new ResponseEntity<String>("Something gone wrong",HttpStatus.OK);
+			throw new ExamException(examId+" was not Found! Please try Again");
 		}
 	}
 	
 	
 	
 	@PostMapping("/admin/assignExam/{userId}/{examId}")
-	public ResponseEntity<String> assignExamToUser(@PathVariable("examId") int examId, @PathVariable("userId") int userId){
+	public ResponseEntity<String> assignExamToUser(@PathVariable("examId") int examId, @PathVariable("userId") int userId) throws AssignExamUserException{
 		String status ="Success";
 		AssignExamToUser obj = service.assignExamToUser(userId,examId);
 		if(obj != null) {
 			return new ResponseEntity<String>(status,HttpStatus.OK);
 		}
 		else {
-			return new ResponseEntity<String>("Something gone wrong",HttpStatus.OK);
+			throw new AssignExamUserException("Something Gone Wrong! Please check the "+userId+" and "+examId +" is exist or not before Assign the exam" );
 		}
 		
 	}
 	
-	@PutMapping("/admin/editAssignExam/{examId}")
-	public ResponseEntity<String> editAssignExam(@RequestBody AssignExamToUser assign, @PathVariable("examId") int examId){
+	
+	
+	@PutMapping("/admin/editAssignedExam/{examId}")
+	public ResponseEntity<String> editAssignedExam(@RequestBody AssignExamToUser assign, @PathVariable("examId") int examId) throws AssignExamUserException{
 		String str = "Successfully Edited";
 		String status = service.editAssignExamToUser(assign, examId);
 		if(status.contentEquals(str)) {
 			return new ResponseEntity<String>(str,HttpStatus.OK);
 		}
 		else
-		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+			throw new AssignExamUserException("Something Gone Wrong! Please check the examId "+examId );
 	}
 	
-	@GetMapping("/admin/getAssignedExamById/{assignedId}")
-	public ResponseEntity<Optional<AssignExamToUser>> getAssignedExamById(@PathVariable("assignedId") int assignedId){
+	
+	
+	@GetMapping("/admin/viewAssignedExamById/{assignedId}")
+	public ResponseEntity<AssignExamToUser> viewAssignedExamById(@PathVariable("assignedId") int assignedId) throws AssignExamUserException{
 		Optional<AssignExamToUser>status =service.viewAssignExamById(assignedId);
-		
-	
-		if(status != null)
+		if(status.isPresent())
 		{
-			return new ResponseEntity<Optional<AssignExamToUser>>(status,HttpStatus.OK);
+			AssignExamToUser obj = status.get();
+			return new ResponseEntity<AssignExamToUser>(obj,HttpStatus.OK);
 		}
-		return new ResponseEntity<Optional<AssignExamToUser>>(HttpStatus.NOT_FOUND);
+		else
+		throw new AssignExamUserException(assignedId+" is not found");
 	}
 		
 	
-	@PostMapping("/user/viewExamHistory/{userId}")
-	public ResponseEntity<List<AssignExamToUser>> viewExamHistory(@PathVariable("userId") int userId){
-		List<AssignExamToUser> obj=service.viewExamHistoryForUserAttended(userId);
-		return new ResponseEntity<List<AssignExamToUser>>(obj,HttpStatus.OK);
+	
+	@GetMapping("/user/viewAllExamsOfUser/{userId}")
+	public ResponseEntity<List<AssignExamToUser>> viewAllExamsOfUser(@PathVariable("userId") int userId) throws AssignExamUserException{
+		List<AssignExamToUser> listObj=service.viewExamHistoryForUserAttended(userId);
+		if(listObj.isEmpty() !=true)
+		return new ResponseEntity<List<AssignExamToUser>>(listObj,HttpStatus.OK);
+		else
+			throw new AssignExamUserException(userId+" is not found");
 	}
 	
-
+	
+	@GetMapping("/admin/checkDateConflict/{userId}/{year}/{month}/{date}")
+	public ResponseEntity<String> checkDateConflict(@PathVariable("userId") int userId ,@PathVariable("year")int year ,@PathVariable("month")int month,@PathVariable("date")int date) {
+		boolean status = service.checkDateConflict(userId, year, month, date);
+		if(status ==true) {
+			System.out.println("We can assign the Exam to "+userId);
+			return new ResponseEntity<String>("No conflict is found, Assign the Exam ",HttpStatus.OK);
+		}
+		else
+			return new ResponseEntity<String>("Error! Conflict is found ",HttpStatus.OK);
+	}
+	
 }

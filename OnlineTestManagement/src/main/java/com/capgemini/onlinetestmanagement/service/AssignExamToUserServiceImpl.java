@@ -1,9 +1,9 @@
 package com.capgemini.onlinetestmanagement.service;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,8 +124,10 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	//Done
 	@Override
 	public String editAssignExamToUser(AssignExamToUser assign,int examId) {
+		
+		Optional<Exam>examObj = examDaoI.findById(examId);
 		Optional<AssignExamToUser> status = assignExamToUserDaoI.findById(assign.getAssignedId());
-		if(status != null) {			
+		if(status != null && examObj!= null) {			
 			Exam obj = assign.getExam();
 			obj.setExamId(examId);
 			obj.setExamName(assign.getExam().getExamName());
@@ -149,32 +151,46 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 
 	/*
 	 * 
-	 * By using the comparing the local date an
+	 * 
 	 */
-	
+	//Done
 	@Override
 	public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId) {
-		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId);
-		 
+		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId); 
 		 System.out.println(list);
-		 
-		 List<AssignExamToUser> assignedList = list.stream()
-				 								  .filter(assignedexam-> !assignedexam.isStatus())
-				 								  .collect(Collectors.toList());
-		 assignedList.sort((e1,e2)->e2.getDateOfExam().compareTo(e1.getDateOfExam()));
-			return assignedList;
+			return list;
 	}
 
 	
 	
 	@Override
-	public List<AssignExamToUser> viewExamForUserToTake(int userId) {
+	public List<AssignExamToUser> viewExamsForUserToTake(int userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId);
-		 List<AssignExamToUser> assignedList = list.stream()
-				 								  .filter(assignedexam->assignedexam.isStatus())
-				 								  .collect(Collectors.toList());
-		 assignedList.sort((e1,e2)->e2.getDateOfExam().compareTo(e1.getDateOfExam()));
-			return assignedList;
+//		 List<AssignExamToUser> assignedList = list.stream()
+//				 								  .filter(assignedexam->assignedexam.isStatus())
+//				 								  .collect(Collectors.toList());
+//		 assignedList.sort((e1,e2)->e2.getDateOfExam().compareTo(e1.getDateOfExam()));
+			return list;
+	}
+
+	@Override
+	public Boolean checkDateConflict(int userId, int year, int month, int date) {
+		List<AssignExamToUser> listObj = viewExamHistoryForUserAttended(userId);
+		if(listObj.isEmpty()!=true) 
+		{
+			Iterator<AssignExamToUser> itr = listObj.iterator();
+			while(itr.hasNext())
+			{
+				AssignExamToUser obj = itr.next();
+				LocalDate dateOfPreviousExams = obj.getDateOfExam();
+				LocalDate datee = LocalDate.of(year, month, date);
+				if(datee.isEqual(dateOfPreviousExams))
+					return false;
+			}
+			return true;
+		}
+		else
+			return false;
 	}
 
 
