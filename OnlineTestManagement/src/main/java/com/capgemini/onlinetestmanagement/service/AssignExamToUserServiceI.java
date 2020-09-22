@@ -37,5 +37,5 @@ public interface AssignExamToUserServiceI {
 		public String editAssignExamToUser(AssignExamToUser editAssignExamToUser ,int examId);
 		public Optional<AssignExamToUser> viewAssignExamById(int assignedId);
 		public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId);
-		public Boolean checkDateConflict(int userId,int year,int month,int date );
+		public String checkDateConflict(int userId,int year,int month,int date );
 }

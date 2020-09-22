@@ -1,5 +1,6 @@
 package com.capgemini.onlinetestmanagement.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,15 +150,25 @@ public class Controller {
 	
 	
 	@GetMapping("/admin/checkDateConflict/{userId}/{year}/{month}/{date}")
-	public ResponseEntity<String> checkDateConflict(@PathVariable("userId") int userId ,@PathVariable("year")int year ,@PathVariable("month")int month,@PathVariable("date")int date) {
+	public ResponseEntity<String> checkDateConflict(@PathVariable("userId") int userId ,@PathVariable("year")int year ,@PathVariable("month")int month,@PathVariable("date")int date) {		
 		
-		boolean status = service.checkDateConflict(userId, year, month, date);
-		if(status == true) {
-			System.out.println("We can assign the Exam to UserId"+userId);
+		String conflictDateMsg = "Conflict is Found on this date";
+		String successMsg ="Assign the Exam on this Date";
+		String dateFormateException ="Date Format Exception";
+		String userNotFoundMsg ="Can't assign to the Exam to Unknow";
+		
+		String status = service.checkDateConflict(userId, year, month, date);
+		
+		if(status.contentEquals(successMsg)) {
+			System.out.println("We can assign the Exam to "+userId);
 			return new ResponseEntity<String>("No conflict is found, Assign the Exam ",HttpStatus.OK);
 		}
+		else if(status.contentEquals(dateFormateException))
+			return new ResponseEntity<String>(dateFormateException,HttpStatus.OK);
+		else if(status.contentEquals(userNotFoundMsg))
+			return new ResponseEntity<String>(userNotFoundMsg,HttpStatus.OK);
 		else
-			return new ResponseEntity<String>("Error! Conflict is found ",HttpStatus.OK);
+			return new ResponseEntity<String>(conflictDateMsg,HttpStatus.OK);
 	}
 	
 }

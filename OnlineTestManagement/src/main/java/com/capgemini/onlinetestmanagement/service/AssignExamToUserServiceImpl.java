@@ -167,15 +167,11 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	@Override
 	public List<AssignExamToUser> viewExamsForUserToTake(int userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId);
-//		 List<AssignExamToUser> assignedList = list.stream()
-//				 								  .filter(assignedexam->assignedexam.isStatus())
-//				 								  .collect(Collectors.toList());
-//		 assignedList.sort((e1,e2)->e2.getDateOfExam().compareTo(e1.getDateOfExam()));
 			return list;
 	}
 
 	@Override
-	public Boolean checkDateConflict(int userId, int year, int month, int date) {
+	public String checkDateConflict(int userId, int year, int month, int date) {		
 			List<AssignExamToUser> listObj = viewExamHistoryForUserAttended(userId);
 			if(listObj.isEmpty()!=true ) 
 			{
@@ -184,28 +180,28 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 				{
 					AssignExamToUser obj = itr.next();
 					LocalDate dateOfPreviousExams = obj.getDateOfExam();
-					try {
+					try
+					{
 						datee = LocalDate.of(year, month, date);
+						System.out.println(datee);
+						if(datee.isEqual(dateOfPreviousExams))
+							return "Conflict is Found on this date";
 					}
-					catch(Exception ex) {
-						System.out.println("Invalid date format");
-						System.out.println("year :"+year+" month :"+month+ "date :"+date);
-						date = date-7;
-						datee = LocalDate.of(year, month, date);
-						System.out.println("Recommended date"+ datee);
+					catch(Exception dateFormateException)
+					{
+						
+						System.out.println(datee);
+						return "Date Format Exception";
 					}
-					if(datee.isEqual(dateOfPreviousExams))
-						return false;
+					
 				}
-				return true;
+				return "Assign the Exam on this Date";
 			}
 			else
-				return false;
+				return "Can't assign to the Exam to Unknow";
 	}
 
 
-
-	
 
 
 	
