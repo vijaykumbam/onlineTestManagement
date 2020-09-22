@@ -1,8 +1,5 @@
 package com.capgemini.onlinetestmanagement.controller;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -150,11 +147,13 @@ public class Controller {
 	}
 	
 	
+	
 	@GetMapping("/admin/checkDateConflict/{userId}/{year}/{month}/{date}")
 	public ResponseEntity<String> checkDateConflict(@PathVariable("userId") int userId ,@PathVariable("year")int year ,@PathVariable("month")int month,@PathVariable("date")int date) {
+		
 		boolean status = service.checkDateConflict(userId, year, month, date);
-		if(status ==true) {
-			System.out.println("We can assign the Exam to "+userId);
+		if(status == true) {
+			System.out.println("We can assign the Exam to UserId"+userId);
 			return new ResponseEntity<String>("No conflict is found, Assign the Exam ",HttpStatus.OK);
 		}
 		else

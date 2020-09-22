@@ -19,7 +19,8 @@ import com.capgemini.onlinetestmanagement.entity.User;
 @Service
 @Transactional
 public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
-
+ 
+	LocalDate datee;
 	
 	@Autowired
 	private AssignExamToUserDaoI assignExamToUserDaoI;
@@ -175,22 +176,31 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 
 	@Override
 	public Boolean checkDateConflict(int userId, int year, int month, int date) {
-		List<AssignExamToUser> listObj = viewExamHistoryForUserAttended(userId);
-		if(listObj.isEmpty()!=true) 
-		{
-			Iterator<AssignExamToUser> itr = listObj.iterator();
-			while(itr.hasNext())
+			List<AssignExamToUser> listObj = viewExamHistoryForUserAttended(userId);
+			if(listObj.isEmpty()!=true ) 
 			{
-				AssignExamToUser obj = itr.next();
-				LocalDate dateOfPreviousExams = obj.getDateOfExam();
-				LocalDate datee = LocalDate.of(year, month, date);
-				if(datee.isEqual(dateOfPreviousExams))
-					return false;
+				Iterator<AssignExamToUser> itr = listObj.iterator();
+				while(itr.hasNext())
+				{
+					AssignExamToUser obj = itr.next();
+					LocalDate dateOfPreviousExams = obj.getDateOfExam();
+					try {
+						datee = LocalDate.of(year, month, date);
+					}
+					catch(Exception ex) {
+						System.out.println("Invalid date format");
+						System.out.println("year :"+year+" month :"+month+ "date :"+date);
+						date = date-7;
+						datee = LocalDate.of(year, month, date);
+						System.out.println("Recommended date"+ datee);
+					}
+					if(datee.isEqual(dateOfPreviousExams))
+						return false;
+				}
+				return true;
 			}
-			return true;
-		}
-		else
-			return false;
+			else
+				return false;
 	}
 
 
