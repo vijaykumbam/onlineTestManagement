@@ -46,9 +46,14 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	}
 
 	@Override
-	public Optional<User> getUserById(int userId) {
+	public User getUserById(int userId) {
 		Optional<User> user = userDaoI.findById(userId);
-		return user;
+		if(user.isPresent())
+		{
+			User userobj = user.get();
+			return userobj;
+		}
+		return null;
 	}
 
 	@Override

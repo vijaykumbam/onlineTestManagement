@@ -12,7 +12,7 @@ public interface AssignExamToUserServiceI {
 	    //User details.......
 		public boolean addUser(User user);
 		public boolean editUser(User user);
-		public Optional<User> getUserById(int userId);
+		public User getUserById(int userId);
 		public List<User> getAllUsers();
 		
 		

@@ -1,6 +1,5 @@
 package com.capgemini.onlinetestmanagement.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,11 +49,10 @@ public class Controller {
 	
 	@GetMapping("/user/getUser/{userId}")
 	public ResponseEntity<User>getUserById(@PathVariable("userId") int userId) throws UserExceptions{
-		Optional<User>status = service.getUserById(userId);
-		if(status.isPresent())
+		User status = service.getUserById(userId);
+		if(status!=null)
 		{
-			User user = status.get();
-			return new ResponseEntity<User>(user,HttpStatus.OK);
+			return new ResponseEntity<User>(status,HttpStatus.OK);
 		}
 		else
 		{
