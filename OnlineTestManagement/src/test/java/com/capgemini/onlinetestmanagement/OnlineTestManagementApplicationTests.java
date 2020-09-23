@@ -3,6 +3,7 @@ package com.capgemini.onlinetestmanagement;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -106,6 +107,46 @@ class OnlineTestManagementApplicationTests {
 		assertEquals(totalRecordAfterInsertSize,totalRecordBeforeInsertSize+1);
 	
 	}
+	
+	
+	@Test
+	@DisplayName("Testing the Assign Feature with Invalid UserID and ExamId")
+	void assignExamToUserWithInvalidDetailsTest() {
+		int userId =13;
+		int examId =11;
+		List<AssignExamToUser> totalRecordBeforeInsert = assignExamToUserDaoI.findAll();
+		int totalRecordBeforeInsertSize = totalRecordBeforeInsert.size();
+		System.out.println("Previous total records in AssignExamTable:" +totalRecordBeforeInsertSize);
+		
+		AssignExamToUser assignExamToUser = assignExamToUserServiceImpl.assignExamToUser(userId, examId);
+		
+		List<AssignExamToUser> totalRecordAfterInsert = assignExamToUserDaoI.findAll();
+		int totalRecordAfterInsertSize = totalRecordAfterInsert.size();
+		System.out.println("Previous total records in AssignExamTable:" +totalRecordAfterInsertSize);
+		
+		if(assignExamToUser==null)
+			
+			
+		assertEquals(totalRecordBeforeInsertSize,totalRecordAfterInsertSize);
+	}
+	
+	
+	@Test
+	@DisplayName("Testing the assignId for Valid assignedId")
+	void viewAssignExamByIdTest() {
+		int assignedExamId = 1232;
+		Optional<AssignExamToUser> assignExamToUserObject  = assignExamToUserServiceImpl.viewAssignExamById(assignedExamId);
+		if(assignExamToUserObject.isPresent())
+			assertEquals(assignedExamId,assignExamToUserObject.get().getAssignedId());
+		else
+		{
+			System.out.println(" Invalid AssignedExamId "+assignedExamId);
+			assertEquals(null,assignExamToUserObject);
+		}
+		
+	}
+	
+	
 	
 	
 }
