@@ -114,21 +114,21 @@ class OnlineTestManagementApplicationTests {
 	void assignExamToUserWithInvalidDetailsTest() {
 		int userId =13;
 		int examId =11;
+		int expectedSize;
 		List<AssignExamToUser> totalRecordBeforeInsert = assignExamToUserDaoI.findAll();
 		int totalRecordBeforeInsertSize = totalRecordBeforeInsert.size();
 		System.out.println("Previous total records in AssignExamTable:" +totalRecordBeforeInsertSize);
 		
 		AssignExamToUser assignExamToUser = assignExamToUserServiceImpl.assignExamToUser(userId, examId);
 		
-		List<AssignExamToUser> totalRecordAfterInsert = assignExamToUserDaoI.findAll();
-		int totalRecordAfterInsertSize = totalRecordAfterInsert.size();
-		System.out.println("Previous total records in AssignExamTable:" +totalRecordAfterInsertSize);
-		
 		if(assignExamToUser==null)
+		{
+			expectedSize =totalRecordBeforeInsertSize;
+			assertEquals(totalRecordBeforeInsertSize,expectedSize);
+		}
+		}
 			
-			
-		assertEquals(totalRecordBeforeInsertSize,totalRecordAfterInsertSize);
-	}
+		
 	
 	
 	@Test

@@ -98,7 +98,7 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 		Optional<Exam> exam=examDaoI.findById(examId);
 		Optional<User> user = userDaoI.findById(userId);
 		
-		if(exam!=null && user!= null) {
+		if(exam.isPresent() && user.isPresent()) {
 			int lastId = assignExamToUserDaoI.getLastExamUserAssignId() ;
 			int maxId = lastId+1;
 			Exam examObj = new Exam();
@@ -152,7 +152,7 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 		return assignExamToUserObj;
 	}
 	
-
+	
 	/*
 	 * 
 	 * 

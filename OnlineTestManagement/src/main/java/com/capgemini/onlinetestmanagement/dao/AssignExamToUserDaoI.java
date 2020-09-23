@@ -20,5 +20,4 @@ public interface AssignExamToUserDaoI extends JpaRepository<AssignExamToUser,Int
 	@Query("from AssignExamToUser examuser inner join fetch examuser.exam e inner join fetch examuser.user u where u.userId=:userId")
 	 List<AssignExamToUser> getListOfExamsAssignToUser(int userId);
 	
-	//from ExamUserAssign examuser inner join fetch examuser.exam e inner join fetch examuser.user u where u.userId=:userid
 }
