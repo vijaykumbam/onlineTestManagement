@@ -99,7 +99,6 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 		Optional<User> user = userDaoI.findById(userId);
 		
 		if(exam!=null && user!= null) {
-			System.out.println("Userid and examId both are present ");
 			int lastId = assignExamToUserDaoI.getLastExamUserAssignId() ;
 			int maxId = lastId+1;
 			Exam examObj = new Exam();
@@ -114,7 +113,6 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 			obj.setStatus(true);
 			obj.setExam(examObj);
 			obj.setUser(userObj);
-			System.out.println("Exam is assigned");
 			return assignExamToUserDaoI.save(obj);
 		}
 		else
@@ -150,8 +148,8 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	//Done
 	@Override
 	public Optional<AssignExamToUser> viewAssignExamById(int assignedId) {
-		Optional<AssignExamToUser> status = assignExamToUserDaoI.findById(assignedId);
-		return status;
+		Optional<AssignExamToUser> assignExamToUserObj = assignExamToUserDaoI.findById(assignedId);
+		return assignExamToUserObj;
 	}
 	
 
@@ -163,7 +161,6 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	@Override
 	public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId); 
-		 System.out.println(list);
 			return list;
 	}
 
@@ -188,14 +185,12 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 					try
 					{
 						datee = LocalDate.of(year, month, date);
-						System.out.println(datee);
 						if(datee.isEqual(dateOfPreviousExams))
 							return "Conflict is Found on this date";
 					}
 					catch(Exception dateFormateException)
 					{
 						
-						System.out.println(datee);
 						return "Date Format Exception";
 					}
 					

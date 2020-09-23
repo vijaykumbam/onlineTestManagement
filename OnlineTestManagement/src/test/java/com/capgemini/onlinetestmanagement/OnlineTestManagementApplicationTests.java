@@ -110,7 +110,7 @@ class OnlineTestManagementApplicationTests {
 	
 	
 	@Test
-	@DisplayName("Testing the Assign Feature with Invalid UserID and ExamId")
+	@DisplayName("Testing the Assign Feature with Invalid UserID and valid ExamId")
 	void assignExamToUserWithInvalidDetailsTest() {
 		int userId =13;
 		int examId =11;
@@ -147,6 +147,59 @@ class OnlineTestManagementApplicationTests {
 	}
 	
 	
+	@Test
+	@DisplayName("Testing the history of Exams Taken by the User [valid credits]: Using UserId ")
+	void viewExamHistoryForValidUserAttended() {
+		int userId = 1;
+		int expectedListSize =3;
+		List<AssignExamToUser> listOfAssignedExamToUser = assignExamToUserServiceImpl.viewExamHistoryForUserAttended(userId);
+		assertEquals(expectedListSize,listOfAssignedExamToUser.size());
+	}
 	
 	
+	@Test
+	@DisplayName("Testing the history of Exams Taken by the User [Invalid credits]: Using UserId ")
+	void viewExamHistoryForInvalidUserAttended() {
+		int userId = 155;
+		int expectedListSize =0;
+		List<AssignExamToUser> listOfAssignedExamToUser = assignExamToUserServiceImpl.viewExamHistoryForUserAttended(userId);
+		assertEquals(expectedListSize,listOfAssignedExamToUser.size());
+	}
+	
+	
+	@Test
+	@DisplayName("Checking the Date conflict with Invalid date format [32] ")
+	void checkDateConflict() {
+		int userId=1;
+		int year =2020;
+		int month =02;
+		int date =32;
+		String dateFormatErrorMsg ="Date Format Exception";
+		String dateConflictMsg =assignExamToUserServiceImpl.checkDateConflict(userId, year, month, date);
+		assertEquals(dateFormatErrorMsg,dateConflictMsg);	
+	}
+	
+	@Test
+	@DisplayName("Checking the Date conflict with valid date format[2020-05-02] ")
+	void checkValidDateFormateConflict() {
+		int userId=1;
+		int year =2020;
+		int month =05;
+		int date =02;
+		String dateConflictFound ="Conflict is Found on this date";
+		String dateConflictMsg =assignExamToUserServiceImpl.checkDateConflict(userId, year, month, date);
+		assertEquals(dateConflictFound,dateConflictMsg);	
+	}
+	
+	@Test
+	@DisplayName("Checking the Date conflict with valid date format[2020-05-02] ")
+	void checkValidDateAndAssignExam() {
+		int userId=1;
+		int year =2020;
+		int month =02;
+		int date =02;
+		String assignExamConfirmMsg ="Assign the Exam on this Date";
+		String dateConflictMsg =assignExamToUserServiceImpl.checkDateConflict(userId, year, month, date);
+		assertEquals(assignExamConfirmMsg,dateConflictMsg);	
+	}
 }

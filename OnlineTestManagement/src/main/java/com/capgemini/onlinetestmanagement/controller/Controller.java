@@ -37,7 +37,6 @@ public class Controller {
 		boolean status = service.addUser(user);
 		if(status == true)
 		{
-			System.out.println("user is added");
 			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		}
 		else
@@ -67,7 +66,6 @@ public class Controller {
 		boolean status = service.addExam(exam);
 		if(status ==true)
 		{
-			System.out.println("exam is added");
 			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		}
 		else
@@ -158,7 +156,6 @@ public class Controller {
 		String status = service.checkDateConflict(userId, year, month, date);
 		
 		if(status.contentEquals(successMsg)) {
-			System.out.println("We can assign the Exam to "+userId);
 			return new ResponseEntity<String>("No conflict is found, Assign the Exam ",HttpStatus.OK);
 		}
 		else if(status.contentEquals(dateFormateException))
