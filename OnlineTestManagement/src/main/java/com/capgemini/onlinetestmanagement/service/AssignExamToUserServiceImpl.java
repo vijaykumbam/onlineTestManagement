@@ -89,9 +89,15 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	
 	
 	
-	
-	
-	//Done
+	/********************************************************************************************************************
+	*       @author           VijayVenkatReddy Kumbam
+	*       Parameter         userId, examId
+	*       version           0.1
+	*       Description       This method will assign the Exam to the User, By Verifying the both userId,examId 
+	*       				  is present. If it is not present then it will null, If both are valid then it will return the 
+	*       				  AssignExamToUser Object.
+	*       Created date      20-SEP-2020
+	********************************************************************************************************************/
 	@Override
 	public AssignExamToUser assignExamToUser(int userId, int examId) {
 		
@@ -119,16 +125,20 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 		{
 			return null;
 		}
-	
 	}
+
 	
-
-
-
-	//Done
+	/********************************************************************************************************************
+	*       @author           VijayVenkatReddy Kumbam
+	*       Parameter         assign[Object], examId
+	*       version           0.1
+	*       Description       This method will edit the assigned Exam to the User, By Verifying the examId 
+	*       				  is present. If it is not present then it will return "Unsuccessfully Edited", 
+	*       				  If object is edited then it will return "Successfully Edited" .
+	*       Created date      20-SEP-2020
+	********************************************************************************************************************/
 	@Override
 	public String editAssignExamToUser(AssignExamToUser assign,int examId) {
-		
 		Optional<Exam>examObj = examDaoI.findById(examId);
 		Optional<AssignExamToUser> status = assignExamToUserDaoI.findById(assign.getAssignedId());
 		if(status != null && examObj!= null) {			
@@ -145,7 +155,13 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 		return "Unsuccessfully Edited"; 
 	}
 	
-	//Done
+	/********************************************************************************************************************
+	*       @author           VijayVenkatReddy Kumbam
+	*       Parameter         assignedId
+	*       version           0.1
+	*       Description       This method will return the AssignExamToUser if the assignedId is present
+	*       Created date      20-SEP-2020
+	********************************************************************************************************************/
 	@Override
 	public Optional<AssignExamToUser> viewAssignExamById(int assignedId) {
 		Optional<AssignExamToUser> assignExamToUserObj = assignExamToUserDaoI.findById(assignedId);
@@ -153,11 +169,15 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	}
 	
 	
-	/*
-	 * 
-	 * 
-	 */
-	//Done
+	
+	/********************************************************************************************************************
+	*       @author           VijayVenkatReddy Kumbam
+	*       Parameter         userId
+	*       version           0.1
+	*       Description       This method will return the List<AssignExamToUser> if it is empty then it will return he 
+	*       				  null or else it will return the list of the AssignExamToUsers.
+	*       Created date      20-SEP-2020
+	********************************************************************************************************************/
 	@Override
 	public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId); 
@@ -166,12 +186,28 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 
 	
 	
+	/********************************************************************************************************************
+	*       @author           VijayVenkatReddy Kumbam
+	*       Parameter         userId
+	*       version           0.1
+	*       Description       This method will give list of Exams which are taken by the User by using the UserId.
+	*       				  Incase if he had not taken then it will return null
+	*       Created date      20-SEP-2020
+	********************************************************************************************************************/
 	@Override
 	public List<AssignExamToUser> viewExamsForUserToTake(int userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId);
 			return list;
 	}
 
+	/********************************************************************************************************************
+	*       @author           VijayVenkatReddy Kumbam
+	*       Parameter         userId,year,month,date
+	*       version           0.1
+	*       Description       This method will check dateConflict. If it found any conflict it return the Date conflict 
+	*       				  is found. else it will return the "We can Assign the Exam".
+	*       Created date      20-SEP-2020
+	********************************************************************************************************************/
 	@Override
 	public String checkDateConflict(int userId, int year, int month, int date) {		
 			List<AssignExamToUser> listObj = viewExamHistoryForUserAttended(userId);
@@ -203,11 +239,5 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 
 
 
-
-	
-
-
-
-	
 	
 }
