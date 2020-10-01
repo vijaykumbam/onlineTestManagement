@@ -46,7 +46,7 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	}
 
 	@Override
-	public User getUserById(int userId) {
+	public User getUserById(long userId) {
 		Optional<User> user = userDaoI.findById(userId);
 		if(user.isPresent())
 		{
@@ -99,14 +99,16 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	*       Created date      20-SEP-2020
 	********************************************************************************************************************/
 	@Override
-	public AssignExamToUser assignExamToUser(int userId, int examId) {
+	public AssignExamToUser assignExamToUser(long userId, int examId) {
 		
 		Optional<Exam> exam=examDaoI.findById(examId);
 		Optional<User> user = userDaoI.findById(userId);
+		System.out.println(exam.get().getExamName());
 		
 		if(exam.isPresent() && user.isPresent()) {
 			int lastId = assignExamToUserDaoI.getLastExamUserAssignId() ;
 			int maxId = lastId+1;
+			
 			Exam examObj = new Exam();
 			examObj.setExamId(examId);
 			
@@ -138,17 +140,22 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	*       Created date      20-SEP-2020
 	********************************************************************************************************************/
 	@Override
-	public String editAssignExamToUser(AssignExamToUser assign,int examId) {
+	public String editAssignExamToUser(int assignedId,int examId) {
 		Optional<Exam>examObj = examDaoI.findById(examId);
-		Optional<AssignExamToUser> status = assignExamToUserDaoI.findById(assign.getAssignedId());
-		if(status != null && examObj!= null) {			
-			Exam obj = assign.getExam();
-			obj.setExamId(examId);
-			obj.setExamName(assign.getExam().getExamName());
-			obj.setMinutes(assign.getExam().getMinutes());
+		Optional<AssignExamToUser> status = assignExamToUserDaoI.findById(assignedId);
+		
+		Exam eObj = new Exam();
+		AssignExamToUser assignObj = new AssignExamToUser();
+		if(status.isPresent() && examObj.isPresent()) {
+			assignObj = status.get();
+			eObj=examObj.get();
 			
-			assign.setExam(obj);
-			assignExamToUserDaoI.saveAndFlush(assign);
+			eObj.setExamId(examId);
+			eObj.setExamName(eObj.getExamName());
+			eObj.setMinutes(eObj.getMinutes());
+			
+			assignObj.setExam(eObj);
+			assignExamToUserDaoI.saveAndFlush(assignObj);
 			return "Successfully Edited";
 		}
 		else
@@ -179,7 +186,7 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	*       Created date      20-SEP-2020
 	********************************************************************************************************************/
 	@Override
-	public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId) {
+	public List<AssignExamToUser> viewExamHistoryForUserAttended(long userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId); 
 			return list;
 	}
@@ -195,7 +202,7 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	*       Created date      20-SEP-2020
 	********************************************************************************************************************/
 	@Override
-	public List<AssignExamToUser> viewExamsForUserToTake(int userId) {
+	public List<AssignExamToUser> viewExamsForUserToTake(long userId) {
 		 List<AssignExamToUser> list = assignExamToUserDaoI.getListOfExamsAssignToUser(userId);
 			return list;
 	}
@@ -209,7 +216,7 @@ public class AssignExamToUserServiceImpl implements AssignExamToUserServiceI{
 	*       Created date      20-SEP-2020
 	********************************************************************************************************************/
 	@Override
-	public String checkDateConflict(int userId, int year, int month, int date) {		
+	public String checkDateConflict(long userId, int year, int month, int date) {		
 			List<AssignExamToUser> listObj = viewExamHistoryForUserAttended(userId);
 			if(listObj.isEmpty()!=true ) 
 			{

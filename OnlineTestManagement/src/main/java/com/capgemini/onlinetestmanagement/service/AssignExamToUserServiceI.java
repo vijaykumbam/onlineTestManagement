@@ -12,7 +12,7 @@ public interface AssignExamToUserServiceI {
 	    //User details.......
 		public boolean addUser(User user);
 		public boolean editUser(User user);
-		public User getUserById(int userId);
+		public User getUserById(long userId);
 		public List<User> getAllUsers();
 		
 		
@@ -29,13 +29,13 @@ public interface AssignExamToUserServiceI {
 		
 		//Queries Started..........
 		
-		public List<AssignExamToUser> viewExamsForUserToTake(int userId);
+		public List<AssignExamToUser> viewExamsForUserToTake(long userId);
 		
 		
 		//Vijay
-		public AssignExamToUser assignExamToUser(int userId, int examId);
-		public String editAssignExamToUser(AssignExamToUser editAssignExamToUser ,int examId);
+		public AssignExamToUser assignExamToUser(long userId, int examId);
+		public String editAssignExamToUser(int assignedId ,int examId);
 		public Optional<AssignExamToUser> viewAssignExamById(int assignedId);
-		public List<AssignExamToUser> viewExamHistoryForUserAttended(int userId);
-		public String checkDateConflict(int userId,int year,int month,int date );
+		public List<AssignExamToUser> viewExamHistoryForUserAttended(long userId);
+		public String checkDateConflict(long userId,int year,int month,int date );
 }

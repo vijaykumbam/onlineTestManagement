@@ -12,7 +12,7 @@ public class User {
 
 	@Id
 	@Column(name="user_id")
-	private int userId;
+	private long userId;
 	@Column(name="user_name", length=25)
 	private String userName;
 	@Column(name="password", length=10)
@@ -31,10 +31,10 @@ public class User {
 	
 	
 	
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 	public String getUserName() {

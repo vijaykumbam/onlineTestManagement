@@ -7,6 +7,6 @@ import com.capgemini.onlinetestmanagement.entity.User;
 
 
 @Repository
-public interface UserDaoI extends JpaRepository<User,Integer>{
+public interface UserDaoI extends JpaRepository<User,Long>{
 	
 }
