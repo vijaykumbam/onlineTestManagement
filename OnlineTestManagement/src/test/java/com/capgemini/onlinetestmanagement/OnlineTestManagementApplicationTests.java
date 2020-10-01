@@ -45,7 +45,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Testing the User by UniqueId :Valid Credits")
 	void getUserByIdValidCreditsTest() {
-		User userObjTest = new User(1,"vijay","passs","user");
+		User userObjTest = new User(11606974,"vijay","passs","user");
 		User userObj = assignExamToUserServiceImpl.getUserById(userObjTest.getUserId());
 		System.out.println(" Hello i am from Test :"+userObj.getRole());
 		assertEquals(userObjTest.getRole(),userObj.getRole());
@@ -92,8 +92,8 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Testing the Assign Feature with valid UserID and ExamId")
 	void assignExamToUserTest() {
-		int userId =1;
-		int examId =11;
+		int userId =11606974;
+		int examId =2001;
 		List<AssignExamToUser> totalRecordBeforeInsert = assignExamToUserDaoI.findAll();
 		int totalRecordBeforeInsertSize = totalRecordBeforeInsert.size();
 		System.out.println("Previous total records in AssignExamTable:" +totalRecordBeforeInsertSize);
@@ -112,15 +112,14 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Testing the Assign Feature with Invalid UserID and valid ExamId")
 	void assignExamToUserWithInvalidDetailsTest() {
-		int userId =13;
-		int examId =11;
+		long userId =13;
+		int examId =2001;
 		List<AssignExamToUser> totalRecordBeforeInsert = assignExamToUserDaoI.findAll();
 		int totalRecordBeforeInsertSize = totalRecordBeforeInsert.size();
 		System.out.println("Previous total records in AssignExamTable:" +totalRecordBeforeInsertSize);
 		
 		AssignExamToUser assignExamToUser = assignExamToUserServiceImpl.assignExamToUser(userId, examId);
-		
-		  if(assignExamToUser== null)
+		  if(assignExamToUser == null)
 			  assertEquals(null,assignExamToUser);
 	
 		}
@@ -131,7 +130,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Testing the assignId for Valid assignedId")
 	void viewAssignExamByIdTest() {
-		int assignedExamId = 1232;
+		int assignedExamId = 123451;
 		Optional<AssignExamToUser> assignExamToUserObject  = assignExamToUserServiceImpl.viewAssignExamById(assignedExamId);
 		if(assignExamToUserObject.isPresent())
 			assertEquals(assignedExamId,assignExamToUserObject.get().getAssignedId());
@@ -147,7 +146,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Testing the history of Exams Taken by the User [valid credits]: Using UserId ")
 	void viewExamHistoryForValidUserAttended() {
-		int userId = 1;
+		int userId = 11606974;
 		boolean expectedListSize =true;
 		boolean actualListSize =false;
 		List<AssignExamToUser> listOfAssignedExamToUser = assignExamToUserServiceImpl.viewExamHistoryForUserAttended(userId);
@@ -163,7 +162,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Testing the history of Exams Taken by the User [Invalid credits]: Using UserId ")
 	void viewExamHistoryForInvalidUserAttended() {
-		int userId = 155;
+		long userId = 155;
 		int expectedListSize =0;
 		List<AssignExamToUser> listOfAssignedExamToUser = assignExamToUserServiceImpl.viewExamHistoryForUserAttended(userId);
 		assertEquals(expectedListSize,listOfAssignedExamToUser.size());
@@ -173,7 +172,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Checking the Date conflict with Invalid date format [32] ")
 	void checkDateConflict() {
-		int userId=1;
+		long userId=11606974;
 		int year =2020;
 		int month =02;
 		int date =32;
@@ -185,7 +184,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Checking the Date conflict with valid date format[2020-05-02] ")
 	void checkValidDateFormateConflict() {
-		int userId=1;
+		long userId=11606974;
 		int year =2020;
 		int month =05;
 		int date =02;
@@ -197,7 +196,7 @@ class OnlineTestManagementApplicationTests {
 	@Test
 	@DisplayName("Checking the Date conflict with valid date format[2020-05-02] ")
 	void checkValidDateAndAssignExam() {
-		int userId=1;
+		long userId=11606974;
 		int year =2020;
 		int month =02;
 		int date =02;
