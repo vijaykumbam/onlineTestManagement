@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="assign_exam_to_user")
-public class AssignExamToUser {
+public class AssignExamToUser implements Serializable{
 	
 	@Id
 	@Column(name="assigned_id")
